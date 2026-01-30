@@ -8,7 +8,8 @@ const nsfwKeywords = [
 // List of NSFW domains
 const nsfwDomains = [
   'pornhub.com', 'xvideos.com', 'redtube.com', 'youporn.com',
-  'xnxx.com', 'xhamster.com', 'onlyfans.com', 'chaturbate.com'
+  'xnxx.com', 'xhamster.com', 'onlyfans.com', 'chaturbate.com',
+  'e621.net'
 ];
 
 // Check if URL contains NSFW keywords
