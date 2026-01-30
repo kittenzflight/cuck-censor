@@ -12,6 +12,36 @@ const nsfwDomains = [
   'e621.net'
 ];
 
+// Whitelist of trusted domains that should never be filtered
+const whitelistedDomains = [
+  'discord.com',
+  'discordapp.com',
+  'cdn.discordapp.com',
+  'media.discordapp.net',
+  'youtube.com',
+  'youtu.be',
+  'twitter.com',
+  'x.com',
+  'reddit.com',
+  'imgur.com',
+  'facebook.com',
+  'instagram.com',
+  'tiktok.com',
+  'twitch.tv',
+  'github.com',
+  'stackoverflow.com',
+  'wikipedia.org',
+  'google.com',
+  'bing.com',
+  'amazon.com'
+];
+
+// Check if current site is whitelisted
+function isWhitelistedSite() {
+  const currentDomain = window.location.hostname.toLowerCase();
+  return whitelistedDomains.some(domain => currentDomain.includes(domain));
+}
+
 // Check if URL contains NSFW keywords
 function isNSFWUrl(url) {
   if (!url) return false;
@@ -79,6 +109,11 @@ function blockImage(img) {
 
 // Scan all images on page
 function scanImages() {
+  // Don't scan if on a whitelisted site
+  if (isWhitelistedSite()) {
+    return;
+  }
+  
   const images = document.querySelectorAll('img');
   images.forEach(img => {
     if (shouldBlockImage(img)) {
@@ -87,11 +122,15 @@ function scanImages() {
   });
 }
 
-// Initial scan
-scanImages();
+// Exit early if on whitelisted site
+if (isWhitelistedSite()) {
+  console.log('Site Blocker: Skipping filtering on whitelisted domain');
+} else {
+  // Initial scan
+  scanImages();
 
-// Watch for new images (for dynamically loaded content)
-const observer = new MutationObserver((mutations) => {
+  // Watch for new images (for dynamically loaded content)
+  const observer = new MutationObserver((mutations) => {
   mutations.forEach((mutation) => {
     mutation.addedNodes.forEach((node) => {
       if (node.tagName === 'IMG') {
@@ -110,19 +149,20 @@ const observer = new MutationObserver((mutations) => {
   });
 });
 
-// Start observing
-observer.observe(document.documentElement, {
-  childList: true,
-  subtree: true
-});
+  // Start observing
+  observer.observe(document.documentElement, {
+    childList: true,
+    subtree: true
+  });
 
-// Also scan when images load
-document.addEventListener('load', (e) => {
-  if (e.target.tagName === 'IMG') {
-    if (shouldBlockImage(e.target)) {
-      blockImage(e.target);
+  // Also scan when images load
+  document.addEventListener('load', (e) => {
+    if (e.target.tagName === 'IMG') {
+      if (shouldBlockImage(e.target)) {
+        blockImage(e.target);
+      }
     }
-  }
-}, true);
+  }, true);
 
-console.log('Site Blocker: Image filtering active');
+  console.log('Site Blocker: Image filtering active');
+}
