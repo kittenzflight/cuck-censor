@@ -53,5 +53,16 @@
       "urlFilter": "*xnxx.com*",
       "resourceTypes": ["main_frame", "sub_frame"]
     }
+  },
+  {
+    "id": 6,
+    "priority": 1,
+    "action": {
+      "type": "block"
+    },
+    "condition": {
+      "urlFilter": "*e621.net*",
+      "resourceTypes": ["main_frame", "sub_frame"]
+    }
   }
 ]
