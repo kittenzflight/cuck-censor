@@ -31,8 +31,6 @@ const whitelistedDomains = [
   'github.com',
   'stackoverflow.com',
   'wikipedia.org',
-  'google.com',
-  'bing.com',
   'amazon.com'
 ];
 
@@ -166,3 +164,4 @@ if (isWhitelistedSite()) {
 
   console.log('Site Blocker: Image filtering active');
 }
+
